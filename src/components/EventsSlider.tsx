@@ -37,15 +37,15 @@ export const EventsSlider: React.FC = () => {
     <MainWrapper>
       <ChevronButton
         onClick={() => swiperInstance?.slidePrev()}
-        visible={canScrollLeft}
+        $visible={canScrollLeft}
       >
         <CircleChevronLeft size={50} strokeWidth={1.6} />
       </ChevronButton>
       <StyledSwiper
         spaceBetween={50}
         slidesPerView={slidesToShow}
-        isGrabbing={isGrabbing}
-        canSwipe={canSwipe}
+        $isGrabbing={isGrabbing}
+        $canSwipe={canSwipe}
         onSwiper={(swiper) => {
           setSwiperInstance(swiper);
           setCanScrollLeft(!swiper.isBeginning);
@@ -67,7 +67,7 @@ export const EventsSlider: React.FC = () => {
       </StyledSwiper>
       <ChevronButton
         onClick={() => swiperInstance?.slideNext()}
-        visible={canScrollRight}
+        $visible={canScrollRight}
       >
         <CircleChevronRight size={50} strokeWidth={1.6} />
       </ChevronButton>
@@ -83,12 +83,15 @@ const MainWrapper = styled.div`
   margin: 0 auto;
 `;
 
-const StyledSwiper = styled(Swiper)<{ isGrabbing: boolean; canSwipe: boolean }>`
+const StyledSwiper = styled(Swiper)<{
+  $isGrabbing: boolean;
+  $canSwipe: boolean;
+}>`
   width: 100%;
   height: 135px;
   cursor: ${(props) =>
-    props.canSwipe ? (props.isGrabbing ? "grabbing" : "grab") : "inherit"};
-  user-select: ${(props) => (props.canSwipe ? "none" : "text")};
+    props.$canSwipe ? (props.$isGrabbing ? "grabbing" : "grab") : "inherit"};
+  user-select: ${(props) => (props.$canSwipe ? "none" : "text")};
 `;
 
 const Event = styled(SwiperSlide)`
@@ -115,14 +118,14 @@ const EventDescription = styled.p`
   text-overflow: ellipsis;
 `;
 
-const ChevronButton = styled.div<{ visible: boolean }>`
-  margin: 0 20px;
-  opacity: ${(props) => (props.visible ? 1 : 0)};
+const ChevronButton = styled.button<{ $visible: boolean }>`
+  margin: 0 40px;
+  opacity: ${(props) => (props.$visible ? 1 : 0)};
   transition: 0.2s;
-  cursor: ${(props) => (props.visible ? "pointer" : "default")};
+  cursor: ${(props) => (props.$visible ? "pointer" : "default")};
 
   &:hover {
-    opacity: ${(props) => (props.visible ? 0.5 : 0)};
+    opacity: ${(props) => (props.$visible ? 0.5 : 0)};
   }
 `;
 

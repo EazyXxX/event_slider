@@ -10,7 +10,7 @@ export const TimeCircle: React.FC = () => {
   return (
     <MainWrapper>
       <HeaderWrapper>
-        <Header>Исторические даты</Header>
+        <h1>Исторические даты</h1>
         <CircleWrapper />
       </HeaderWrapper>
       <SegmentSelectorWrapper>
@@ -33,16 +33,20 @@ const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
   z-index: 1;
   margin-top: 40px;
 `;
 
 const CircleWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
+  width: 530px;
+  height: 530px;
+  position: fixed;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  border: 1px solid rgba(66, 86, 122, 0.8);
+  border-radius: 50%;
 `;
 
 const HeaderWrapper = styled.div`
@@ -53,8 +57,6 @@ const HeaderWrapper = styled.div`
   border-width: 0 0 0 4px;
   border-style: solid;
 `;
-
-const Header = styled.h1``;
 
 const SegmentSelectorWrapper = styled.div`
   max-width: 120px;
