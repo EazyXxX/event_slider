@@ -1,0 +1,132 @@
+import styled from "styled-components";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
+import { Swiper as SwiperType } from "swiper/types";
+import "swiper/css";
+import { useMemo, useState } from "react";
+import { EventsData } from "../types";
+
+const mockedData = [
+  { year: 2010, description: "Год выхода Fallout: New Vegas" },
+  {
+    year: 2011,
+    description: "Год выхода The Elder Scrolls: Skyrim",
+  },
+  { year: 2012, description: "Год выхода FarCry 3" },
+  { year: 2013, description: "Год выхода The Last of Us" },
+  { year: 2014, description: "Год выхода Dragon Age: Inquisition" },
+  { year: 2015, description: "Год выхода The Wither 3: Wild Hunt" },
+];
+
+export const EventsSlider: React.FC = () => {
+  const [infoData] = useState<EventsData>(mockedData);
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
+  const [isGrabbing, setIsGrabbing] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const canSwipe = useMemo(() => mockedData.length > 3, []);
+  // Dynamic slides value
+  const slidesToShow = canSwipe ? 3 : infoData.length;
+
+  if (!infoData || infoData.length === 0) {
+    return <EmptyStub>Никаких событий, сэр 🧐</EmptyStub>;
+  }
+
+  return (
+    <MainWrapper>
+      <ChevronButton
+        onClick={() => swiperInstance?.slidePrev()}
+        visible={canScrollLeft}
+      >
+        <CircleChevronLeft size={50} strokeWidth={1.6} />
+      </ChevronButton>
+      <StyledSwiper
+        spaceBetween={50}
+        slidesPerView={slidesToShow}
+        isGrabbing={isGrabbing}
+        canSwipe={canSwipe}
+        onSwiper={(swiper) => {
+          setSwiperInstance(swiper);
+          setCanScrollLeft(!swiper.isBeginning);
+          setCanScrollRight(!swiper.isEnd);
+        }}
+        onSlideChange={(swiper) => {
+          setCanScrollLeft(!swiper.isBeginning);
+          setCanScrollRight(!swiper.isEnd);
+        }}
+        onTouchStart={() => setIsGrabbing(true)}
+        onTouchEnd={() => setIsGrabbing(false)}
+      >
+        {infoData.map((el) => (
+          <Event key={el.year}>
+            <EventYear>{el.year}</EventYear>
+            <EventDescription>{el.description}</EventDescription>
+          </Event>
+        ))}
+      </StyledSwiper>
+      <ChevronButton
+        onClick={() => swiperInstance?.slideNext()}
+        visible={canScrollRight}
+      >
+        <CircleChevronRight size={50} strokeWidth={1.6} />
+      </ChevronButton>
+    </MainWrapper>
+  );
+};
+
+const MainWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 100%;
+  margin: 0 auto;
+`;
+
+const StyledSwiper = styled(Swiper)<{ isGrabbing: boolean; canSwipe: boolean }>`
+  width: 100%;
+  height: 135px;
+  cursor: ${(props) =>
+    props.canSwipe ? (props.isGrabbing ? "grabbing" : "grab") : "inherit"};
+  user-select: ${(props) => (props.canSwipe ? "none" : "text")};
+`;
+
+const Event = styled(SwiperSlide)`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+  width: 320px;
+  max-width: 100%;
+  max-height: calc(100% - 2px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const EventYear = styled.p`
+  margin: 0 0 15px 0;
+  color: #3877ee;
+`;
+
+const EventDescription = styled.p`
+  margin: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const ChevronButton = styled.div<{ visible: boolean }>`
+  margin: 0 20px;
+  opacity: ${(props) => (props.visible ? 1 : 0)};
+  transition: 0.2s;
+  cursor: ${(props) => (props.visible ? "pointer" : "default")};
+
+  &:hover {
+    opacity: ${(props) => (props.visible ? 0.5 : 0)};
+  }
+`;
+
+const EmptyStub = styled.h4`
+  margin: 0 auto;
+  color: gray;
+`;
