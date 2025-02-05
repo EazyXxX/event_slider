@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { EventsSlider } from "./components/EventsSlider";
+import { SegmentSlider } from "./components/SegmentSlider";
 import { TimeCircle } from "./components/TimeCircle";
 import { GridOverlay } from "./components/GridOverlay";
 
@@ -8,7 +8,7 @@ function App() {
     <MainWrapper>
       <GridOverlay />
       <TimeCircle />
-      <EventsSlider />
+      <SegmentSlider />
     </MainWrapper>
   );
 }

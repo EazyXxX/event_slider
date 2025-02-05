@@ -1,11 +1,32 @@
 import styled from "styled-components";
 import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
 import { useState } from "react";
-
-const mockDate = "06/06";
+import { mockedData } from "../utils/mocks";
 
 export const TimeCircle: React.FC = () => {
-  const [date] = useState(mockDate);
+  const [segmentCounter, setSegmentCounter] = useState<number>(
+    parseInt(localStorage.getItem("segmentCounter") || "1")
+  );
+
+  const switchToNextSegment = (count: 1 | -1) => {
+    const saveNewCount = (arg?: number) => {
+      localStorage.setItem(
+        "segmentCounter",
+        (arg ?? segmentCounter + count).toString()
+      );
+      setSegmentCounter((prev) => arg ?? prev + count);
+    };
+
+    if (count === -1 && segmentCounter <= 1) {
+      saveNewCount(6);
+      return;
+    } else if (count === 1 && segmentCounter >= 6) {
+      saveNewCount(1);
+      return;
+    } else {
+      saveNewCount();
+    }
+  };
 
   return (
     <MainWrapper>
@@ -14,13 +35,21 @@ export const TimeCircle: React.FC = () => {
         <CircleWrapper />
       </HeaderWrapper>
       <SegmentSelectorWrapper>
-        {date}
+        0{segmentCounter}/0{mockedData.length}
         <ButtonsWrapper>
           <ChevronWrapper>
-            <CircleChevronLeft size={50} strokeWidth={1} />
+            <CircleChevronLeft
+              onClick={() => switchToNextSegment(-1)}
+              size={50}
+              strokeWidth={1}
+            />
           </ChevronWrapper>
           <ChevronWrapper>
-            <CircleChevronRight size={50} strokeWidth={1} />
+            <CircleChevronRight
+              onClick={() => switchToNextSegment(1)}
+              size={50}
+              strokeWidth={1}
+            />
           </ChevronWrapper>
         </ButtonsWrapper>
       </SegmentSelectorWrapper>

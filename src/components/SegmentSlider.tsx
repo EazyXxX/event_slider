@@ -5,26 +5,15 @@ import { Swiper as SwiperType } from "swiper/types";
 import "swiper/css";
 import { useMemo, useState } from "react";
 import { EventsData } from "../types";
+import { mockedData } from "../utils/mocks";
 
-const mockedData = [
-  { year: 2010, description: "Год выхода Fallout: New Vegas" },
-  {
-    year: 2011,
-    description: "Год выхода The Elder Scrolls: Skyrim",
-  },
-  { year: 2012, description: "Год выхода FarCry 3" },
-  { year: 2013, description: "Год выхода The Last of Us" },
-  { year: 2014, description: "Год выхода Dragon Age: Inquisition" },
-  { year: 2015, description: "Год выхода The Wither 3: Wild Hunt" },
-];
-
-export const EventsSlider: React.FC = () => {
+export const SegmentSlider: React.FC = () => {
   const [infoData] = useState<EventsData>(mockedData);
+
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   const [isGrabbing, setIsGrabbing] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
-
   const canSwipe = useMemo(() => mockedData.length > 3, []);
   // Dynamic slides value
   const slidesToShow = canSwipe ? 3 : infoData.length;
