@@ -3,17 +3,18 @@ import { SegmentSlider } from "./components/SegmentSlider";
 import { TimeCircle } from "./components/TimeCircle";
 import { GridOverlay } from "./components/GridOverlay";
 import { Moon, Sun } from "lucide-react";
-import { useState } from "react";
+import { useBaseStore } from "./stores/baseStore";
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const toggleDarkMode = useBaseStore((state) => state.toggleDarkMode);
+  const isDarkMode = useBaseStore((state) => state.isDarkMode);
 
   return (
     <MainWrapper>
       <GridOverlay />
       <TimeCircle />
       <SegmentSlider />
-      <ThemeToggler onClick={() => setIsDarkMode((prev) => !prev)}>
+      <ThemeToggler onClick={toggleDarkMode}>
         {isDarkMode ? <Moon size={30} /> : <Sun size={30} />}
       </ThemeToggler>
     </MainWrapper>

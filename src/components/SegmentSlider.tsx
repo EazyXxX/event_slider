@@ -4,11 +4,15 @@ import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
 import { Swiper as SwiperType } from "swiper/types";
 import "swiper/css";
 import { useMemo, useState } from "react";
-import { EventsData } from "../types";
 import { mockedData } from "../utils/mocks";
+import { useBaseStore } from "../stores/baseStore";
 
 export const SegmentSlider: React.FC = () => {
-  const [infoData] = useState<EventsData>(mockedData[0].events);
+  const { segmentCounter } = useBaseStore();
+  const infoData = useMemo(
+    () => mockedData[segmentCounter - 1].events,
+    [segmentCounter]
+  );
 
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   const [isGrabbing, setIsGrabbing] = useState(false);

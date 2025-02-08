@@ -6,6 +6,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { mockedTopics, mockedData } from "../utils/mocks";
+import { useBaseStore } from "../stores/baseStore";
 
 const SEGMENTS = mockedTopics.length;
 const SEGMENT_ANGLE = 360 / SEGMENTS; // 60°
@@ -21,13 +22,14 @@ interface TimeCircleProps {
 export const TimeCircle: React.FC<TimeCircleProps> = ({
   storageKey = "segmentCounter",
 }) => {
-  const [segmentCounter, setSegmentCounter] = useState<number>(
-    parseInt(localStorage.getItem(storageKey) || "1")
-  );
+  const { segmentCounter, setSegmentCounter } = useBaseStore();
   // Состояние для контроля анимации (вращения)
   const [isRotating, setIsRotating] = useState(false);
 
-  const [yearGap, setYearGap] = useState({ first: 2020, last: 2021 });
+  const [yearGap, setYearGap] = useState<{ first: number; last: number }>(
+    mockedData[segmentCounter - 1].yearGap
+  );
+  const [activeTopic, setActiveTopic] = useState("");
 
   const circleRef = useRef<HTMLDivElement>(null);
   // Храним накопленный угол поворота всего колеса
@@ -93,6 +95,12 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
     },
     [storageKey]
   );
+
+  useEffect(() => {
+    if (!isRotating) {
+      setActiveTopic(mockedData[segmentCounter - 1].topic);
+    }
+  }, [isRotating, segmentCounter]);
 
   useEffect(() => {
     const targetGap = mockedData[segmentCounter - 1].yearGap;
@@ -179,9 +187,7 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
           </ChevronWrapper>
         </ButtonsWrapper>
       </SegmentSelectorWrapper>
-      <ActiveLabel $isVisible={!isRotating}>
-        {mockedData[segmentCounter - 1].topic}
-      </ActiveLabel>
+      <ActiveLabel $isVisible={!isRotating}>{activeTopic}</ActiveLabel>
       <YearGap>
         <FirstYear>{yearGap.first}</FirstYear>
         <LastYear>{yearGap.last}</LastYear>
