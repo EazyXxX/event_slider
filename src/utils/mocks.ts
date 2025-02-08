@@ -6,12 +6,12 @@ export const mockedData = [
     },
     topic: "Видеоигры",
     events: [
-      { year: 2010, description: "Год выхода Fallout: New Vegas" },
-      { year: 2011, description: "Год выхода The Elder Scrolls V: Skyrim" },
-      { year: 2012, description: "Год выхода Far Cry 3" },
-      { year: 2013, description: "Год выхода The Last of Us" },
-      { year: 2014, description: "Год выхода Dark Souls II" },
-      { year: 2015, description: "Год выхода The Witcher 3: Wild Hunt" },
+      { year: 2010, description: "Выход Fallout: New Vegas" },
+      { year: 2011, description: "Выход The Elder Scrolls V: Skyrim" },
+      { year: 2012, description: "Выход Far Cry 3" },
+      { year: 2013, description: "Выход The Last of Us" },
+      { year: 2014, description: "Выход Dark Souls II" },
+      { year: 2015, description: "Выход The Witcher 3: Wild Hunt" },
     ],
   },
   {
@@ -21,15 +21,61 @@ export const mockedData = [
     },
     topic: "Кино",
     events: [
-      { year: 2010, description: "Выход фильма 'Начало' (Inception)" },
-      { year: 2011, description: "Выход фильма 'Артист' (The Artist)" },
-      { year: 2012, description: "Выход фильма 'Мстители' (The Avengers)" },
-      { year: 2013, description: "Выход фильма 'Гравитация' (Gravity)" },
-      { year: 2014, description: "Выход фильма 'Интерстеллар' (Interstellar)" },
       {
         year: 2015,
+        description: "Выход фильма 'Безумный Макс: Дорога ярости'",
+      },
+      { year: 2016, description: "Выход фильма 'Ла-Ла Ленд'" },
+      { year: 2017, description: "Выход фильма 'Дюнкерк'" },
+      {
+        year: 2018,
+        description: "Выход фильма 'Мстители: Война бесконечности'",
+      },
+      { year: 2019, description: "Выход фильма 'Джокер'" },
+      { year: 2020, description: "Выход фильма 'Довод'" },
+    ],
+  },
+  {
+    yearGap: {
+      first: 2005,
+      last: 2010,
+    },
+    topic: "Музыка",
+    events: [
+      {
+        year: 2005,
         description:
-          "Выход фильма 'Безумный Макс: Дорога ярости' (Mad Max: Fury Road)",
+          "Релиз альбома 'Lullabies to Paralyze' - Queens of the Stone Age",
+      },
+      {
+        year: 2006,
+        description: "Выход альбома 'Black Holes and Revelations' - Muse",
+      },
+      { year: 2007, description: "Выход 'In Rainbows' - Radiohead" },
+      { year: 2008, description: "Релиз 'Justice' - † (Cross)" },
+      { year: 2009, description: "Выход альбома 'Humbug' - Arctic Monkeys" },
+      { year: 2010, description: "Премьера 'Tron: Legacy' OST - Daft Punk" },
+    ],
+  },
+  {
+    yearGap: {
+      first: 2005,
+      last: 2010,
+    },
+    topic: "История",
+    events: [
+      { year: 2005, description: "Начало YouTube – первая загрузка видео" },
+      { year: 2006, description: "Ликвидация Саддама Хусейна" },
+      { year: 2007, description: "Презентация первого iPhone" },
+      { year: 2008, description: "Мировой финансовый кризис" },
+      {
+        year: 2009,
+        description: "Барак Обама становится первым чернокожим президентом США",
+      },
+      {
+        year: 2010,
+        description:
+          "Авария на платформе Deepwater Horizon в Мексиканском заливе",
       },
     ],
   },
@@ -38,81 +84,53 @@ export const mockedData = [
       first: 2020,
       last: 2025,
     },
-    topic: "Музыка",
-    events: [
-      {
-        year: 2010,
-        description:
-          "Релиз альбома 'My Beautiful Dark Twisted Fantasy' - Kanye West",
-      },
-      { year: 2011, description: "Выход альбома '21' - Adele" },
-      {
-        year: 2012,
-        description: "Выход альбома 'Channel Orange' - Frank Ocean",
-      },
-      {
-        year: 2013,
-        description: "Релиз альбома 'Random Access Memories' - Daft Punk",
-      },
-      { year: 2014, description: "Выход альбома '1989' - Taylor Swift" },
-      {
-        year: 2015,
-        description: "Релиз альбома 'To Pimp a Butterfly' - Kendrick Lamar",
-      },
-    ],
-  },
-  {
-    yearGap: {
-      first: 2025,
-      last: 2030,
-    },
-    topic: "История",
-    events: [
-      { year: 2010, description: "Начало Арабской весны" },
-      { year: 2011, description: "Ликвидация Усамы бен Ладена" },
-      { year: 2012, description: "Принятие закона Магнитского в США" },
-      {
-        year: 2013,
-        description: "Папа Франциск становится главой Католической церкви",
-      },
-      { year: 2014, description: "Аннексия Крыма Россией" },
-      {
-        year: 2015,
-        description: "Подписание Парижского соглашения по климату",
-      },
-    ],
-  },
-  {
-    yearGap: {
-      first: 2030,
-      last: 2035,
-    },
     topic: "Технологии",
     events: [
-      { year: 2010, description: "Запуск первого iPad от Apple" },
-      { year: 2011, description: "Запуск Google+ (позже закрыт)" },
-      { year: 2012, description: "Выход Windows 8" },
-      { year: 2013, description: "Представление PlayStation 4 и Xbox One" },
-      { year: 2014, description: "Запуск Tesla Model S P85D" },
       {
-        year: 2015,
-        description: "Разработка технологии CRISPR для редактирования генома",
+        year: 2020,
+        description: "Запуск первых коммерческих рейсов SpaceX Crew Dragon",
+      },
+      { year: 2021, description: "Презентация Apple M1 Pro и M1 Max" },
+      {
+        year: 2022,
+        description: "Развитие метавселенной и массовый переход в Web3",
+      },
+      {
+        year: 2023,
+        description:
+          "Расцвет ИИ: ChatGPT и другие нейросети становятся мейнстримом",
+      },
+      {
+        year: 2024,
+        description:
+          "Запуск сети спутникового интернета Starlink в большинстве стран",
+      },
+      {
+        year: 2025,
+        description:
+          "Развитие квантовых компьютеров и их коммерческое применение",
       },
     ],
   },
   {
     yearGap: {
-      first: 2035,
-      last: 2040,
+      first: 2000,
+      last: 2005,
     },
     topic: "Бизнес",
     events: [
-      { year: 2010, description: "Выход Facebook на IPO" },
-      { year: 2011, description: "Основание компании Snapchat" },
-      { year: 2012, description: "Покупка Instagram компанией Facebook" },
-      { year: 2013, description: "Выход Twitter на IPO" },
-      { year: 2014, description: "Alibaba проводит крупнейшее IPO в истории" },
-      { year: 2015, description: "Запуск платежного сервиса Apple Pay" },
+      {
+        year: 2000,
+        description: "Пузырь доткомов: крах множества интернет-компаний",
+      },
+      {
+        year: 2001,
+        description: "Основание Apple Store и рост компании Apple",
+      },
+      { year: 2002, description: "Выход PayPal на биржу" },
+      { year: 2003, description: "Запуск Tesla Motors Илоном Маском" },
+      { year: 2004, description: "Создание Facebook Марком Цукербергом" },
+      { year: 2005, description: "Google покупает Android Inc." },
     ],
   },
 ];

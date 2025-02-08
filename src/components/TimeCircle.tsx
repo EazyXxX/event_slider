@@ -223,9 +223,10 @@ const HeaderWrapper = styled.div`
   max-width: 430px;
   margin: 0;
   padding-left: 78px;
-  border-image: linear-gradient(to bottom, #3877ee 0%, #ef5da8 100%) 1;
   border-width: 0 0 0 4px;
   border-style: solid;
+  border-image: ${(props) =>
+    `linear-gradient(to bottom, ${props.theme.promoBlue} 0%, ${props.theme.promoPink} 100%) 1`};
 `;
 
 const SegmentSelectorWrapper = styled.div`
@@ -235,7 +236,7 @@ const SegmentSelectorWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   font-size: 14px;
-  color: #42567a;
+  color: ${(props) => props.theme.text};
   font-weight: 400;
 `;
 
@@ -252,10 +253,11 @@ const ChevronWrapper = styled.button`
   align-items: center;
   cursor: pointer;
   transition: 0.1s;
-  color: #42567a;
   background: none;
   border: none;
   padding: 0;
+  color: ${(props) => props.theme.button.color};
+
   &:hover {
     color: #303f5c;
     transition: 0.1s;
@@ -314,11 +316,11 @@ const YearGap = styled.div`
 `;
 
 const FirstYear = styled.p`
-  color: #3877ee;
+  color: ${(props) => props.theme.promoBlue};
 `;
 
 const LastYear = styled(FirstYear)`
-  color: #ef5da8;
+  color: ${(props) => props.theme.promoPink};
 `;
 
 const ActiveLabel = styled.div<{ $isVisible: boolean }>`
@@ -327,7 +329,7 @@ const ActiveLabel = styled.div<{ $isVisible: boolean }>`
   top: calc(50% - 238px);
   font-size: 24px;
   font-weight: 700;
-  color: #42567a;
+  color: ${(props) => props.theme.text};
   opacity: ${(props) => (props.$isVisible ? 1 : 0)};
   transition: opacity 0.3s ease;
   z-index: 2;

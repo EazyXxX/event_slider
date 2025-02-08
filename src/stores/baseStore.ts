@@ -8,8 +8,12 @@ interface BaseStore {
 }
 
 export const useBaseStore = create<BaseStore>((set) => ({
-  isDarkMode: true,
-  toggleDarkMode: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
+  isDarkMode: localStorage.getItem("isDarkMode") === "light" ? false : true,
+  toggleDarkMode: () =>
+    set((state) => {
+      localStorage.setItem("isDarkMode", !state.isDarkMode ? "dark" : "light");
+      return { isDarkMode: !state.isDarkMode };
+    }),
   segmentCounter: parseInt(localStorage.getItem("segmentCounter") || "1"),
   setSegmentCounter: (num: number) => set(() => ({ segmentCounter: num })),
 }));
