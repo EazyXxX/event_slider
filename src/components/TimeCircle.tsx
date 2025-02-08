@@ -27,6 +27,8 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
   // Состояние для контроля анимации (вращения)
   const [isRotating, setIsRotating] = useState(false);
 
+  const [yearGap, setYearGap] = useState({ first: 2020, last: 2021 });
+
   const circleRef = useRef<HTMLDivElement>(null);
   // Храним накопленный угол поворота всего колеса
   const currentRotation = useRef<number>(0);
@@ -93,7 +95,30 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
   );
 
   useEffect(() => {
-    console.log(mockedData[segmentCounter - 1]);
+    const targetGap = mockedData[segmentCounter - 1].yearGap;
+    const interval = setInterval(() => {
+      setYearGap((prev) => {
+        if (prev.first === targetGap.first && prev.last === targetGap.last) {
+          clearInterval(interval);
+          return prev;
+        }
+        return {
+          first:
+            prev.first < targetGap.first
+              ? prev.first + 1
+              : prev.first > targetGap.first
+              ? prev.first - 1
+              : prev.first,
+          last:
+            prev.last < targetGap.last
+              ? prev.last + 1
+              : prev.last > targetGap.last
+              ? prev.last - 1
+              : prev.last,
+        };
+      });
+    }, 100);
+    return () => clearInterval(interval);
   }, [segmentCounter]);
 
   return (
@@ -158,8 +183,8 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
         {mockedData[segmentCounter - 1].topic}
       </ActiveLabel>
       <YearGap>
-        <FirstYear>{mockedData[segmentCounter - 1].yearGap.first}</FirstYear>
-        <LastYear>{mockedData[segmentCounter - 1].yearGap.last}</LastYear>
+        <FirstYear>{yearGap.first}</FirstYear>
+        <LastYear>{yearGap.last}</LastYear>
       </YearGap>
     </TimeCircleContainer>
   );
