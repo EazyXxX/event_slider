@@ -35,11 +35,17 @@ h1 {
 }
 
 button {
+  padding: 0;
   background: none;
   border: none;
   transition: 0.1s;
+  cursor: pointer;
 }
 button:hover {
-  opacity: 0.6;
+  opacity: 0.8;
   transition: 0.1s;
+}
+
+p {
+  margin: 0;
 }

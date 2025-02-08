@@ -29,7 +29,7 @@ const GridWrapper = styled.div`
 
   /* Horizontal line */
   &::before {
-    top: 42%;
+    top: 40%;
     left: 0;
     width: 100%;
     height: 1px; /* Line thickness */

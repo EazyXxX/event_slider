@@ -8,13 +8,13 @@ import { EventsData } from "../types";
 import { mockedData } from "../utils/mocks";
 
 export const SegmentSlider: React.FC = () => {
-  const [infoData] = useState<EventsData>(mockedData);
+  const [infoData] = useState<EventsData>(mockedData[0].events);
 
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   const [isGrabbing, setIsGrabbing] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
-  const canSwipe = useMemo(() => mockedData.length > 3, []);
+  const canSwipe = useMemo(() => infoData.length > 3, [infoData.length]);
   // Dynamic slides value
   const slidesToShow = canSwipe ? 3 : infoData.length;
 
