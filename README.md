@@ -1,4 +1,4 @@
-# Whatsapp Web Client
+# Events slider
 
 A simple circle slider app that can showcase your data segmented into interactive points containing time period info.
 
