@@ -6,6 +6,7 @@ import { Swiper as SwiperType } from "swiper/types";
 import "swiper/css";
 import { mockedData } from "../utils/mocks";
 import { useBaseStore } from "../stores/baseStore";
+import { breakpoints } from "../styles/theme";
 
 const FADE_DURATION = 700;
 
@@ -21,16 +22,8 @@ export const SegmentSlider: React.FC = () => {
 
   const { segmentCounter } = useBaseStore();
 
-  const canSwipe = segmentEvents.length > 3;
-  const slidesToShow = canSwipe ? 3 : segmentEvents.length;
+  const isAdaptive = useBaseStore((state) => state.isAdaptive);
 
-  // Update nav buttons visibility
-  const updateNavButtons = (swiper: SwiperType) => {
-    setCanScrollLeft(!swiper.isBeginning);
-    setCanScrollRight(!swiper.isEnd);
-  };
-
-  // Update segment data dimming effect
   useEffect(() => {
     setIsFading(true);
     const timeoutId = setTimeout(() => {
@@ -45,6 +38,16 @@ export const SegmentSlider: React.FC = () => {
     return <EmptyStub $isFading={isFading}>Никаких событий, сэр 🧐</EmptyStub>;
   }
 
+  // if (isMobile) {
+  //   return (
+  //     <DotNavigation>
+  //       {segmentEvents.slice(0, 6).map((_, index) => (
+  //         <Dot key={index} $isActive={index === segmentCounter - 1} />
+  //       ))}
+  //     </DotNavigation>
+  //   );
+  // }
+
   return (
     <MainWrapper>
       <ChevronButton
@@ -54,16 +57,22 @@ export const SegmentSlider: React.FC = () => {
         <CircleChevronLeft size={50} strokeWidth={1.6} />
       </ChevronButton>
       <StyledSwiper
-        spaceBetween={50}
-        slidesPerView={slidesToShow}
+        spaceBetween={window.innerWidth < breakpoints.tablet ? 30 : 50}
+        slidesPerView={
+          isAdaptive ? 1.5 : segmentEvents.length > 3 ? 3 : segmentEvents.length
+        }
         $isGrabbing={isGrabbing}
-        $canSwipe={canSwipe}
+        $canSwipe={segmentEvents.length > 3}
         $isFading={isFading}
         onSwiper={(swiper) => {
           swiperInstance.current = swiper;
-          updateNavButtons(swiper);
+          setCanScrollLeft(!swiper.isBeginning);
+          setCanScrollRight(!swiper.isEnd);
         }}
-        onSlideChange={(swiper) => updateNavButtons(swiper)}
+        onSlideChange={(swiper) => {
+          setCanScrollLeft(!swiper.isBeginning);
+          setCanScrollRight(!swiper.isEnd);
+        }}
         onTouchStart={() => setIsGrabbing(true)}
         onTouchEnd={() => setIsGrabbing(false)}
       >
@@ -80,6 +89,13 @@ export const SegmentSlider: React.FC = () => {
       >
         <CircleChevronRight size={50} strokeWidth={1.6} />
       </ChevronButton>
+      {isAdaptive && (
+        <DotNavigation>
+          {segmentEvents.slice(0, 6).map((_, index) => (
+            <Dot key={index} $isActive={index === segmentCounter - 1} />
+          ))}
+        </DotNavigation>
+      )}
     </MainWrapper>
   );
 };
@@ -89,6 +105,13 @@ const MainWrapper = styled.div`
   align-items: center;
   max-width: 100%;
   margin: 0 auto;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    margin: 100px 20px 0 20px;
+    padding-top: 10px;
+    border-top: ${(props) => `1px solid ${props.theme.border}`};
+    flex-direction: column;
+  }
 `;
 
 const StyledSwiper = styled(Swiper)<{
@@ -103,6 +126,10 @@ const StyledSwiper = styled(Swiper)<{
   cursor: ${(props) =>
     props.$canSwipe ? (props.$isGrabbing ? "grabbing" : "grab") : "inherit"};
   user-select: ${(props) => (props.$canSwipe ? "none" : "text")};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    max-height: 200px;
+  }
 `;
 
 const Event = styled(SwiperSlide)`
@@ -119,7 +146,7 @@ const Event = styled(SwiperSlide)`
 
 const EventYear = styled.p`
   margin: 0 0 15px 0;
-  color: #3877ee;
+  color: ${(props) => props.theme.promoBlue};
 `;
 
 const EventDescription = styled.p`
@@ -140,6 +167,10 @@ const ChevronButton = styled.button<{ $visible: boolean }>`
   &:hover {
     opacity: ${(props) => (props.$visible ? 0.5 : 0)};
   }
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    display: none;
+  }
 `;
 
 const EmptyStub = styled.h4<{ $isFading: boolean }>`
@@ -150,6 +181,29 @@ const EmptyStub = styled.h4<{ $isFading: boolean }>`
   opacity: ${(props) => (props.$isFading ? 0 : 1)};
   transition: opacity ${FADE_DURATION}ms ease-in-out;
   color: ${(props) => props.theme.gray};
+`;
+
+const DotNavigation = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+`;
+
+const Dot = styled.div<{ $isActive: boolean }>`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: ${(props) =>
+    props.$isActive ? props.theme.promoBlue : props.theme.adaptiveInfoSegments};
+  transition: background-color 0.3s;
 `;
 
 export default SegmentSlider;

@@ -18,7 +18,7 @@ const GridWrapper = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  z-index: -2;
+  z-index: 0;
 
   &::before,
   &::after {
@@ -43,6 +43,10 @@ const GridWrapper = styled.div`
     width: 1px; /* Line thickness */
     height: 100%;
     transform: translateX(-50%);
+  }
+
+  @media (max-width: 767px) {
+    display: none;
   }
 `;
 

@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { mockedTopics, mockedData } from "../utils/mocks";
 import { useBaseStore } from "../stores/baseStore";
+import SegmentSlider from "./SegmentSlider";
 
 const SEGMENTS = mockedTopics.length;
 const SEGMENT_ANGLE = 360 / SEGMENTS; // 60°
@@ -34,6 +35,8 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
 
   const circleRef = useRef<HTMLDivElement>(null);
   const currentRotation = useRef<number>(0);
+
+  const isAdaptive = useBaseStore((state) => state.isAdaptive);
 
   // Auxiliary function for updating the rotation of numbers inside a circle
   const updateOptionNumbersRotation = (rotation: number) => {
@@ -163,9 +166,10 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
   return (
     <TimeCircleContainer>
       <HeaderWrapper>
-        <h1>Исторические даты</h1>
+        <PrimaryHeader>Исторические даты</PrimaryHeader>
       </HeaderWrapper>
       <CircleWrapper ref={circleRef}>{renderOptions()}</CircleWrapper>
+      {isAdaptive && <SegmentSlider />}
       <SegmentSelectorWrapper>
         0{segmentCounter}/06
         <ButtonsWrapper>
@@ -174,7 +178,7 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
               onClick={() =>
                 rotateToSegment(segmentCounter === 1 ? 6 : segmentCounter - 1)
               }
-              size={50}
+              size={isAdaptive ? 30 : 50}
               strokeWidth={1}
             />
           </ChevronWrapper>
@@ -183,7 +187,7 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
               onClick={() =>
                 rotateToSegment(segmentCounter === 6 ? 1 : segmentCounter + 1)
               }
-              size={50}
+              size={isAdaptive ? 30 : 50}
               strokeWidth={1}
             />
           </ChevronWrapper>
@@ -206,6 +210,10 @@ const TimeCircleContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+    height: calc(100vh - 20px);
+  }
 `;
 
 const CircleWrapper = styled.div`
@@ -218,6 +226,10 @@ const CircleWrapper = styled.div`
   border: 1px solid rgba(66, 86, 122, 0.8);
   border-radius: 50%;
   z-index: 1;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    display: none;
+  }
 `;
 
 const HeaderWrapper = styled.div`
@@ -229,6 +241,23 @@ const HeaderWrapper = styled.div`
   border-style: solid;
   border-image: ${(props) =>
     `linear-gradient(to bottom, ${props.theme.promoBlue} 0%, ${props.theme.promoPink} 100%) 1`};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    border: 0;
+    font-size: 20px;
+    padding: 0;
+    line-height: 1;
+  }
+`;
+
+const PrimaryHeader = styled.h1`
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    font-size: 1.4em;
+    line-height: 1.2;
+    max-width: 123px;
+    padding-left: 20px;
+    margin-top: 60px;
+  }
 `;
 
 const SegmentSelectorWrapper = styled.div`
@@ -240,6 +269,13 @@ const SegmentSelectorWrapper = styled.div`
   font-size: 14px;
   color: ${(props) => props.theme.textAlt};
   font-weight: 400;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    margin: 0 0 0 20px;
+    font-size: 1em;
+    align-items: flex-start;
+    max-width: 70px;
+  }
 `;
 
 const ButtonsWrapper = styled.div`
@@ -248,6 +284,10 @@ const ButtonsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    margin-top: 4px;
+  }
 `;
 
 const ChevronWrapper = styled.button`
@@ -320,6 +360,11 @@ const YearGap = styled.div`
   @media (max-width: 1400px) {
     font-size: 8em;
   }
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    font-size: 3.3em;
+    top: 40%;
+  }
 `;
 
 const FirstYear = styled.p`
@@ -340,6 +385,10 @@ const ActiveLabel = styled.div<{ $isVisible: boolean }>`
   opacity: ${(props) => (props.$isVisible ? 1 : 0)};
   transition: opacity 0.3s ease;
   z-index: 2;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    display: none;
+  }
 `;
 
 export default TimeCircle;

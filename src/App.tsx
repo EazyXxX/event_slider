@@ -9,6 +9,7 @@ import { base, darkTheme, lightTheme } from "./styles/theme";
 function App() {
   const toggleDarkMode = useBaseStore((state) => state.toggleDarkMode);
   const isDarkMode = useBaseStore((state) => state.isDarkMode);
+  const isAdaptive = useBaseStore((state) => state.isAdaptive);
 
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
@@ -16,7 +17,7 @@ function App() {
         <MainWrapper>
           <GridOverlay />
           <TimeCircle />
-          <SegmentSlider />
+          {!isAdaptive && <SegmentSlider />}
           <ThemeToggler onClick={toggleDarkMode}>
             {isDarkMode ? (
               <Moon color={base.white} size={30} />
