@@ -23,11 +23,11 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
   storageKey = "segmentCounter",
 }) => {
   const { segmentCounter, setSegmentCounter } = useBaseStore();
-  // Состояние для контроля анимации (вращения)
+  // Состояние для контроля анимации вращения
   const [isRotating, setIsRotating] = useState(false);
 
   const [yearGap, setYearGap] = useState<{ first: number; last: number }>(
-    mockedData[segmentCounter - 1].yearGap
+    mockedData[segmentCounter - 1]?.yearGap || {}
   );
   const [activeTopic, setActiveTopic] = useState("");
 
@@ -65,7 +65,7 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
   // При переключении сегмента запускаем анимацию вращения
   const rotateToSegment = useCallback(
     (targetSegment: number) => {
-      if (!circleRef.current) return;
+      if (!circleRef.current || targetSegment === segmentCounter) return;
       setIsRotating(true);
       const delta = calculateShortestRotation(targetSegment);
       currentRotation.current += delta - 30;
@@ -93,16 +93,19 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
       localStorage.setItem(storageKey, targetSegment.toString());
       setSegmentCounter(targetSegment);
     },
-    [storageKey]
+    [segmentCounter, setSegmentCounter, storageKey]
   );
 
   useEffect(() => {
     if (!isRotating) {
-      setActiveTopic(mockedData[segmentCounter - 1].topic);
+      setActiveTopic(mockedData[segmentCounter - 1]?.topic);
     }
   }, [isRotating, segmentCounter]);
 
   useEffect(() => {
+    if (!mockedData[segmentCounter - 1]?.yearGap) {
+      return;
+    }
     const targetGap = mockedData[segmentCounter - 1].yearGap;
     const interval = setInterval(() => {
       setYearGap((prev) => {
@@ -189,8 +192,8 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
       </SegmentSelectorWrapper>
       <ActiveLabel $isVisible={!isRotating}>{activeTopic}</ActiveLabel>
       <YearGap>
-        <FirstYear>{yearGap.first}</FirstYear>
-        <LastYear>{yearGap.last}</LastYear>
+        <FirstYear>{yearGap?.first || "?"}</FirstYear>
+        <LastYear>{yearGap?.last || "?"}</LastYear>
       </YearGap>
     </TimeCircleContainer>
   );
@@ -236,7 +239,7 @@ const SegmentSelectorWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   font-size: 14px;
-  color: ${(props) => props.theme.text};
+  color: ${(props) => props.theme.textAlt};
   font-weight: 400;
 `;
 
@@ -259,7 +262,6 @@ const ChevronWrapper = styled.button`
   color: ${(props) => props.theme.button.color};
 
   &:hover {
-    color: #303f5c;
     transition: 0.1s;
   }
 `;

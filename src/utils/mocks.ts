@@ -1,6 +1,27 @@
 export const mockedData = [
   {
     yearGap: {
+      first: 2000,
+      last: 2005,
+    },
+    topic: "Бизнес",
+    events: [
+      {
+        year: 2000,
+        description: "Пузырь доткомов: крах множества интернет-компаний",
+      },
+      {
+        year: 2001,
+        description: "Основание Apple Store и рост компании Apple",
+      },
+      { year: 2002, description: "Выход PayPal на биржу" },
+      { year: 2003, description: "Запуск Tesla Motors Илоном Маском" },
+      { year: 2004, description: "Создание Facebook Марком Цукербергом" },
+      { year: 2005, description: "Google покупает Android Inc." },
+    ],
+  },
+  {
+    yearGap: {
       first: 2010,
       last: 2015,
     },
@@ -110,27 +131,6 @@ export const mockedData = [
         description:
           "Развитие квантовых компьютеров и их коммерческое применение",
       },
-    ],
-  },
-  {
-    yearGap: {
-      first: 2000,
-      last: 2005,
-    },
-    topic: "Бизнес",
-    events: [
-      {
-        year: 2000,
-        description: "Пузырь доткомов: крах множества интернет-компаний",
-      },
-      {
-        year: 2001,
-        description: "Основание Apple Store и рост компании Apple",
-      },
-      { year: 2002, description: "Выход PayPal на биржу" },
-      { year: 2003, description: "Запуск Tesla Motors Илоном Маском" },
-      { year: 2004, description: "Создание Facebook Марком Цукербергом" },
-      { year: 2005, description: "Google покупает Android Inc." },
     ],
   },
 ];

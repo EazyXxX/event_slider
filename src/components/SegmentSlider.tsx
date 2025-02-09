@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
@@ -8,38 +8,41 @@ import { mockedData } from "../utils/mocks";
 import { useBaseStore } from "../stores/baseStore";
 
 export const SegmentSlider: React.FC = () => {
-  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
+  const swiperInstance = useRef<SwiperType | null>(null);
   const [isGrabbing, setIsGrabbing] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
-  const [isFading, setIsFading] = useState(true);
+  const [isFading, setIsFading] = useState(false);
+  const [currentSegment, setCurrentSegment] = useState(
+    mockedData[0]?.events || []
+  );
 
   const { segmentCounter } = useBaseStore();
 
-  // Отложенное обновление данных с анимацией
-  const [eventsData, setEventsData] = useState(
-    mockedData[segmentCounter - 1].events
-  );
+  // Загружаем новые данные только после завершения анимации
+  useEffect(() => {
+    setIsFading(true);
+    const timeout = setTimeout(() => {
+      setCurrentSegment(mockedData[segmentCounter - 1]?.events || []);
+      setIsFading(false);
+    }, 700);
 
+    return () => clearTimeout(timeout);
+  }, [segmentCounter]);
+
+  // Запоминаем данные, чтобы уменьшить лишние ререндеры
+  const eventsData = useMemo(() => currentSegment, [currentSegment]);
   const canSwipe = useMemo(() => eventsData.length > 3, [eventsData.length]);
   const slidesToShow = canSwipe ? 3 : eventsData.length;
 
-  useEffect(() => {
-    setIsFading(true);
-    setTimeout(() => {
-      setEventsData(mockedData[segmentCounter - 1].events);
-      setIsFading(false);
-    }, 700);
-  }, [segmentCounter]);
-
-  if (!eventsData || eventsData.length === 0) {
-    return <EmptyStub>Никаких событий, сэр 🧐</EmptyStub>;
+  if (eventsData.length === 0) {
+    return <EmptyStub $isFading={isFading}>Никаких событий, сэр 🧐</EmptyStub>;
   }
 
   return (
     <MainWrapper>
       <ChevronButton
-        onClick={() => swiperInstance?.slidePrev()}
+        onClick={() => swiperInstance.current?.slidePrev()}
         $visible={canScrollLeft}
       >
         <CircleChevronLeft size={50} strokeWidth={1.6} />
@@ -51,7 +54,7 @@ export const SegmentSlider: React.FC = () => {
         $canSwipe={canSwipe}
         $isFading={isFading}
         onSwiper={(swiper) => {
-          setSwiperInstance(swiper);
+          swiperInstance.current = swiper;
           setCanScrollLeft(!swiper.isBeginning);
           setCanScrollRight(!swiper.isEnd);
         }}
@@ -70,7 +73,7 @@ export const SegmentSlider: React.FC = () => {
         ))}
       </StyledSwiper>
       <ChevronButton
-        onClick={() => swiperInstance?.slideNext()}
+        onClick={() => swiperInstance.current?.slideNext()}
         $visible={canScrollRight}
       >
         <CircleChevronRight size={50} strokeWidth={1.6} />
@@ -95,7 +98,7 @@ const StyledSwiper = styled(Swiper)<{
   width: 100%;
   height: 135px;
   opacity: ${(props) => (props.$isFading ? 0 : 1)};
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.7s ease-in-out;
   cursor: ${(props) =>
     props.$canSwipe ? (props.$isGrabbing ? "grabbing" : "grab") : "inherit"};
   user-select: ${(props) => (props.$canSwipe ? "none" : "text")};
@@ -138,7 +141,12 @@ const ChevronButton = styled.button<{ $visible: boolean }>`
   }
 `;
 
-const EmptyStub = styled.h4`
+const EmptyStub = styled.h4<{ $isFading: boolean }>`
   margin: 0 auto;
-  color: gray;
+  height: 135px;
+  display: flex;
+  align-items: center;
+  opacity: ${(props) => (props.$isFading ? 0 : 1)};
+  transition: opacity 0.7s ease-in-out;
+  color: ${(props) => props.theme.gray};
 `;
