@@ -210,10 +210,6 @@ const TimeCircleContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    height: calc(100vh - 20px);
-  }
 `;
 
 const CircleWrapper = styled.div`

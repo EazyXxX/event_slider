@@ -38,16 +38,6 @@ export const SegmentSlider: React.FC = () => {
     return <EmptyStub $isFading={isFading}>Никаких событий, сэр 🧐</EmptyStub>;
   }
 
-  // if (isMobile) {
-  //   return (
-  //     <DotNavigation>
-  //       {segmentEvents.slice(0, 6).map((_, index) => (
-  //         <Dot key={index} $isActive={index === segmentCounter - 1} />
-  //       ))}
-  //     </DotNavigation>
-  //   );
-  // }
-
   return (
     <MainWrapper>
       <ChevronButton
