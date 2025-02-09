@@ -1,50 +1,38 @@
-# React + TypeScript + Vite
+# Whatsapp Web Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple circle slider app that can showcase your data segmented into interactive points containing time period info.
 
-Currently, two official plugins are available:
+### Project features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+There may be from 2 to 6 time periods and the main circle block is independent from the other page logic (which means that 2 or more independent circle event blocks situated on one page are possible).
 
-## Expanding the ESLint configuration
+There are no UI libraries used in this project - only pure styled-components realization.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+App's demo is hosted on Netlify => https://eventsslider.netlify.app/
 
-- Configure the top-level `parserOptions` property like this:
+## How to run this app?
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Prerequisites
+
+- npm
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+
+```
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+3. Use this command for building the app for production:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+```
+npm run build
+```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+Or this command to run the app in develop mode:
+
+```
+npm run dev
 ```
