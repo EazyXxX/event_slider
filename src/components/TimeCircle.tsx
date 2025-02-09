@@ -10,6 +10,9 @@ import { useBaseStore } from "../stores/baseStore";
 
 const SEGMENTS = mockedTopics.length;
 const SEGMENT_ANGLE = 360 / SEGMENTS; // 60°
+const RADIUS = 250;
+const ROTATION_OFFSET = 30;
+const GSAP_ANIMATION_DURATION = 1;
 
 const getDesiredRotation = (targetSegment: number) => {
   return 60 - SEGMENT_ANGLE * (targetSegment - 1);
@@ -23,68 +26,50 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
   storageKey = "segmentCounter",
 }) => {
   const { segmentCounter, setSegmentCounter } = useBaseStore();
-  // Состояние для контроля анимации вращения
   const [isRotating, setIsRotating] = useState(false);
-
   const [yearGap, setYearGap] = useState<{ first: number; last: number }>(
-    mockedData[segmentCounter - 1]?.yearGap || {}
+    mockedData[segmentCounter - 1]?.yearGap || { first: 0, last: 0 }
   );
   const [activeTopic, setActiveTopic] = useState("");
 
   const circleRef = useRef<HTMLDivElement>(null);
-  // Храним накопленный угол поворота всего колеса
   const currentRotation = useRef<number>(0);
 
-  // При монтировании сразу устанавливаем положение колеса без анимации
-  useEffect(() => {
+  // Auxiliary function for updating the rotation of numbers inside a circle
+  const updateOptionNumbersRotation = (rotation: number) => {
     if (circleRef.current) {
-      currentRotation.current = getDesiredRotation(segmentCounter);
-      gsap.set(circleRef.current, {
-        rotation: currentRotation.current - 30,
-        transformOrigin: "center",
-      });
-      // Обновляем только числа внутри этого блока
       const numbers = circleRef.current.querySelectorAll(".option-number");
       numbers.forEach((num) => {
         gsap.set(num, {
-          rotation: -currentRotation.current + 30,
+          rotation: -rotation + ROTATION_OFFSET,
           transformOrigin: "center center",
         });
       });
     }
-  }, []); // выполняется один раз при монтировании
-
-  // Вычисляем минимальную разницу между текущим углом и желаемым, нормализуя её в диапазоне [-180, 180]
-  const calculateShortestRotation = (targetSegment: number) => {
-    const desiredRotation = getDesiredRotation(targetSegment);
-    let delta = desiredRotation - currentRotation.current;
-    delta = ((((delta + 180) % 360) + 360) % 360) - 180;
-    return delta;
   };
 
-  // При переключении сегмента запускаем анимацию вращения
+  // Calculate the minimum difference between the current angle and the desired one, normalizing it in the range [-180, 180]
+  const calculateShortestRotation = (targetSegment: number) => {
+    const desiredRotation = getDesiredRotation(targetSegment);
+    const delta =
+      ((desiredRotation - currentRotation.current + 180) % 360) - 180;
+    return delta < -180 ? delta + 360 : delta;
+  };
+
+  // Start the rotation animation when switching to the segment
   const rotateToSegment = useCallback(
     (targetSegment: number) => {
       if (!circleRef.current || targetSegment === segmentCounter) return;
       setIsRotating(true);
       const delta = calculateShortestRotation(targetSegment);
-      currentRotation.current += delta - 30;
+      currentRotation.current += delta - ROTATION_OFFSET;
       gsap.to(circleRef.current, {
         rotation: currentRotation.current,
         transformOrigin: "center",
-        duration: 1,
+        duration: GSAP_ANIMATION_DURATION,
         ease: "power2.out",
         onUpdate: () => {
-          if (circleRef.current) {
-            const numbers =
-              circleRef.current.querySelectorAll(".option-number");
-            numbers.forEach((num) => {
-              gsap.set(num, {
-                rotation: -currentRotation.current,
-                transformOrigin: "center center",
-              });
-            });
-          }
+          updateOptionNumbersRotation(currentRotation.current + 30);
         },
         onComplete: () => {
           setIsRotating(false);
@@ -96,17 +81,60 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
     [segmentCounter, setSegmentCounter, storageKey]
   );
 
+  // Calculate circle options
+  const renderOptions = () => {
+    return Array.from({ length: SEGMENTS }, (_, index) => {
+      const angle = SEGMENT_ANGLE * index;
+      // Calculating coordinates
+      const x = RADIUS * Math.cos((angle - 90) * (Math.PI / 180));
+      const y = RADIUS * Math.sin((angle - 90) * (Math.PI / 180));
+
+      return (
+        <OptionContainer
+          key={index + 1}
+          style={{
+            transform: `translate(${x}px, ${y}px)`,
+          }}
+        >
+          <OptionDot
+            $isActive={segmentCounter === index + 1}
+            onClick={() => rotateToSegment(index + 1)}
+          >
+            <OptionNumber
+              className="option-number"
+              $isVisible={segmentCounter === index + 1}
+            >
+              {index + 1}
+            </OptionNumber>
+          </OptionDot>
+        </OptionContainer>
+      );
+    });
+  };
+
+  // Initial rotation setup
+  useEffect(() => {
+    if (circleRef.current) {
+      currentRotation.current = getDesiredRotation(segmentCounter);
+      gsap.set(circleRef.current, {
+        rotation: currentRotation.current - ROTATION_OFFSET,
+        transformOrigin: "center",
+      });
+      updateOptionNumbersRotation(currentRotation.current);
+    }
+  }, []);
+
+  // Setting up active topic on rotation's end
   useEffect(() => {
     if (!isRotating) {
       setActiveTopic(mockedData[segmentCounter - 1]?.topic);
     }
   }, [isRotating, segmentCounter]);
 
+  // Setting up year gap
   useEffect(() => {
-    if (!mockedData[segmentCounter - 1]?.yearGap) {
-      return;
-    }
-    const targetGap = mockedData[segmentCounter - 1].yearGap;
+    const targetGap = mockedData[segmentCounter - 1]?.yearGap;
+    if (!targetGap) return;
     const interval = setInterval(() => {
       setYearGap((prev) => {
         if (prev.first === targetGap.first && prev.last === targetGap.last) {
@@ -128,7 +156,7 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
               : prev.last,
         };
       });
-    }, 100);
+    }, 80);
     return () => clearInterval(interval);
   }, [segmentCounter]);
 
@@ -137,36 +165,7 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
       <HeaderWrapper>
         <h1>Исторические даты</h1>
       </HeaderWrapper>
-      <CircleWrapper ref={circleRef}>
-        {Array.from({ length: SEGMENTS }, (_, index) => {
-          const angle = SEGMENT_ANGLE * index;
-          const radius = 250;
-          const x = radius * Math.cos((angle - 90) * (Math.PI / 180));
-          const y = radius * Math.sin((angle - 90) * (Math.PI / 180));
-          return (
-            <OptionContainer
-              key={index + 1}
-              style={{
-                left: "50%",
-                top: "50%",
-                transform: `translate(${x}px, ${y}px)`,
-              }}
-            >
-              <OptionDot
-                $isActive={segmentCounter === index + 1}
-                onClick={() => rotateToSegment(index + 1)}
-              >
-                <OptionNumber
-                  className="option-number"
-                  $isVisible={segmentCounter === index + 1}
-                >
-                  {index + 1}
-                </OptionNumber>
-              </OptionDot>
-            </OptionContainer>
-          );
-        })}
-      </CircleWrapper>
+      <CircleWrapper ref={circleRef}>{renderOptions()}</CircleWrapper>
       <SegmentSelectorWrapper>
         0{segmentCounter}/06
         <ButtonsWrapper>
@@ -192,8 +191,8 @@ export const TimeCircle: React.FC<TimeCircleProps> = ({
       </SegmentSelectorWrapper>
       <ActiveLabel $isVisible={!isRotating}>{activeTopic}</ActiveLabel>
       <YearGap>
-        <FirstYear>{yearGap?.first || "?"}</FirstYear>
-        <LastYear>{yearGap?.last || "?"}</LastYear>
+        <FirstYear>{yearGap.first || "?"}</FirstYear>
+        <LastYear>{yearGap.last || "?"}</LastYear>
       </YearGap>
     </TimeCircleContainer>
   );
@@ -268,6 +267,8 @@ const ChevronWrapper = styled.button`
 
 const OptionContainer = styled.div`
   position: absolute;
+  top: 50%;
+  left: 50%;
   width: 0;
   height: 0;
 `;
@@ -309,12 +310,16 @@ const YearGap = styled.div`
   gap: 0.5em;
   text-align: center;
   font-weight: 700;
-  font-size: 160px;
+  font-size: 10em;
   line-height: 160px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 0;
+
+  @media (max-width: 1400px) {
+    font-size: 8em;
+  }
 `;
 
 const FirstYear = styled.p`
@@ -336,3 +341,5 @@ const ActiveLabel = styled.div<{ $isVisible: boolean }>`
   transition: opacity 0.3s ease;
   z-index: 2;
 `;
+
+export default TimeCircle;

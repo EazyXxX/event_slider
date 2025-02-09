@@ -50,6 +50,14 @@ const MainWrapper = styled.div`
   color: ${(props) => props.theme.text};
   margin: 0 240px;
   position: relative;
+
+  @media (max-width: 1500px) {
+    margin: 0 100px;
+  }
+
+  @media (max-width: 1200px) {
+    margin: 0;
+  }
 `;
 
 const ThemeToggler = styled.button`

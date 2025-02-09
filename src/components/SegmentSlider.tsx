@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
@@ -7,35 +7,41 @@ import "swiper/css";
 import { mockedData } from "../utils/mocks";
 import { useBaseStore } from "../stores/baseStore";
 
+const FADE_DURATION = 700;
+
 export const SegmentSlider: React.FC = () => {
   const swiperInstance = useRef<SwiperType | null>(null);
   const [isGrabbing, setIsGrabbing] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
-  const [isFading, setIsFading] = useState(false);
-  const [currentSegment, setCurrentSegment] = useState(
-    mockedData[0]?.events || []
-  );
+  const [isFading, setIsFading] = useState(true);
+  const [segmentEvents, setSegmentEvents] = useState([
+    { year: 0, description: "" },
+  ]);
 
   const { segmentCounter } = useBaseStore();
 
-  // Загружаем новые данные только после завершения анимации
+  const canSwipe = segmentEvents.length > 3;
+  const slidesToShow = canSwipe ? 3 : segmentEvents.length;
+
+  // Update nav buttons visibility
+  const updateNavButtons = (swiper: SwiperType) => {
+    setCanScrollLeft(!swiper.isBeginning);
+    setCanScrollRight(!swiper.isEnd);
+  };
+
+  // Update segment data dimming effect
   useEffect(() => {
     setIsFading(true);
-    const timeout = setTimeout(() => {
-      setCurrentSegment(mockedData[segmentCounter - 1]?.events || []);
+    const timeoutId = setTimeout(() => {
+      setSegmentEvents(mockedData[segmentCounter - 1]?.events || []);
       setIsFading(false);
-    }, 700);
+    }, FADE_DURATION);
 
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(timeoutId);
   }, [segmentCounter]);
 
-  // Запоминаем данные, чтобы уменьшить лишние ререндеры
-  const eventsData = useMemo(() => currentSegment, [currentSegment]);
-  const canSwipe = useMemo(() => eventsData.length > 3, [eventsData.length]);
-  const slidesToShow = canSwipe ? 3 : eventsData.length;
-
-  if (eventsData.length === 0) {
+  if (segmentEvents.length === 0) {
     return <EmptyStub $isFading={isFading}>Никаких событий, сэр 🧐</EmptyStub>;
   }
 
@@ -55,17 +61,13 @@ export const SegmentSlider: React.FC = () => {
         $isFading={isFading}
         onSwiper={(swiper) => {
           swiperInstance.current = swiper;
-          setCanScrollLeft(!swiper.isBeginning);
-          setCanScrollRight(!swiper.isEnd);
+          updateNavButtons(swiper);
         }}
-        onSlideChange={(swiper) => {
-          setCanScrollLeft(!swiper.isBeginning);
-          setCanScrollRight(!swiper.isEnd);
-        }}
+        onSlideChange={(swiper) => updateNavButtons(swiper)}
         onTouchStart={() => setIsGrabbing(true)}
         onTouchEnd={() => setIsGrabbing(false)}
       >
-        {eventsData.map((el) => (
+        {segmentEvents.map((el) => (
           <Event key={el.year}>
             <EventYear>{el.year}</EventYear>
             <EventDescription>{el.description}</EventDescription>
@@ -84,7 +86,6 @@ export const SegmentSlider: React.FC = () => {
 
 const MainWrapper = styled.div`
   display: flex;
-  flex-direction: row;
   align-items: center;
   max-width: 100%;
   margin: 0 auto;
@@ -98,7 +99,7 @@ const StyledSwiper = styled(Swiper)<{
   width: 100%;
   height: 135px;
   opacity: ${(props) => (props.$isFading ? 0 : 1)};
-  transition: opacity 0.7s ease-in-out;
+  transition: opacity ${FADE_DURATION}ms ease-in-out;
   cursor: ${(props) =>
     props.$canSwipe ? (props.$isGrabbing ? "grabbing" : "grab") : "inherit"};
   user-select: ${(props) => (props.$canSwipe ? "none" : "text")};
@@ -132,7 +133,7 @@ const EventDescription = styled.p`
 const ChevronButton = styled.button<{ $visible: boolean }>`
   margin: 0 40px;
   opacity: ${(props) => (props.$visible ? 1 : 0)};
-  transition: 0.2s;
+  transition: opacity 0.2s;
   cursor: ${(props) => (props.$visible ? "pointer" : "default")};
   color: ${(props) => props.theme.button.color};
 
@@ -147,6 +148,8 @@ const EmptyStub = styled.h4<{ $isFading: boolean }>`
   display: flex;
   align-items: center;
   opacity: ${(props) => (props.$isFading ? 0 : 1)};
-  transition: opacity 0.7s ease-in-out;
+  transition: opacity ${FADE_DURATION}ms ease-in-out;
   color: ${(props) => props.theme.gray};
 `;
+
+export default SegmentSlider;

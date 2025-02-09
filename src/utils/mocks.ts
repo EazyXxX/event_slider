@@ -8,16 +8,20 @@ export const mockedData = [
     events: [
       {
         year: 2000,
-        description: "Пузырь доткомов: крах множества интернет-компаний",
+        description: "Крах пузыря доткомов обрушил фондовые рынки",
+      },
+      { year: 2001, description: "Apple открыла первые Apple Store" },
+      { year: 2002, description: "PayPal провёл успешное IPO" },
+      { year: 2003, description: "Илон Маск основал Tesla Motors" },
+      {
+        year: 2004,
+        description: "Facebook появился как студенческая соцсеть",
       },
       {
-        year: 2001,
-        description: "Основание Apple Store и рост компании Apple",
+        year: 2005,
+        description:
+          "Google приобрела Android, заложив основу мобильной революции",
       },
-      { year: 2002, description: "Выход PayPal на биржу" },
-      { year: 2003, description: "Запуск Tesla Motors Илоном Маском" },
-      { year: 2004, description: "Создание Facebook Марком Цукербергом" },
-      { year: 2005, description: "Google покупает Android Inc." },
     ],
   },
   {
@@ -44,59 +48,28 @@ export const mockedData = [
     events: [
       {
         year: 2015,
-        description: "Выход фильма 'Безумный Макс: Дорога ярости'",
+        description: "Фильм 'Безумный Макс: Дорога ярости' получил 6 Оскаров",
       },
-      { year: 2016, description: "Выход фильма 'Ла-Ла Ленд'" },
-      { year: 2017, description: "Выход фильма 'Дюнкерк'" },
+      {
+        year: 2016,
+        description: "'Ла-Ла Ленд' стал триумфом музыкального кино",
+      },
+      {
+        year: 2017,
+        description: "Кристофер Нолан снял военный шедевр 'Дюнкерк'",
+      },
       {
         year: 2018,
-        description: "Выход фильма 'Мстители: Война бесконечности'",
-      },
-      { year: 2019, description: "Выход фильма 'Джокер'" },
-      { year: 2020, description: "Выход фильма 'Довод'" },
-    ],
-  },
-  {
-    yearGap: {
-      first: 2005,
-      last: 2010,
-    },
-    topic: "Музыка",
-    events: [
-      {
-        year: 2005,
         description:
-          "Релиз альбома 'Lullabies to Paralyze' - Queens of the Stone Age",
+          "Мстители: Война бесконечности — эпическое объединение героев",
       },
       {
-        year: 2006,
-        description: "Выход альбома 'Black Holes and Revelations' - Muse",
-      },
-      { year: 2007, description: "Выход 'In Rainbows' - Radiohead" },
-      { year: 2008, description: "Релиз 'Justice' - † (Cross)" },
-      { year: 2009, description: "Выход альбома 'Humbug' - Arctic Monkeys" },
-      { year: 2010, description: "Премьера 'Tron: Legacy' OST - Daft Punk" },
-    ],
-  },
-  {
-    yearGap: {
-      first: 2005,
-      last: 2010,
-    },
-    topic: "История",
-    events: [
-      { year: 2005, description: "Начало YouTube – первая загрузка видео" },
-      { year: 2006, description: "Ликвидация Саддама Хусейна" },
-      { year: 2007, description: "Презентация первого iPhone" },
-      { year: 2008, description: "Мировой финансовый кризис" },
-      {
-        year: 2009,
-        description: "Барак Обама становится первым чернокожим президентом США",
+        year: 2019,
+        description: "Фильм 'Джокер' вызвал дискуссии о психическом здоровье",
       },
       {
-        year: 2010,
-        description:
-          "Авария на платформе Deepwater Horizon в Мексиканском заливе",
+        year: 2020,
+        description: "'Довод' Кристофера Нолана исследовал временные парадоксы",
       },
     ],
   },
@@ -105,31 +78,98 @@ export const mockedData = [
       first: 2020,
       last: 2025,
     },
-    topic: "Технологии",
+    topic: "Музыка",
     events: [
       {
         year: 2020,
-        description: "Запуск первых коммерческих рейсов SpaceX Crew Dragon",
+        description: "The Weeknd взорвал чарты с 'Blinding Lights'",
       },
-      { year: 2021, description: "Презентация Apple M1 Pro и M1 Max" },
+      {
+        year: 2021,
+        description: "ABBA вернулась с новым альбомом после 40 лет",
+      },
       {
         year: 2022,
-        description: "Развитие метавселенной и массовый переход в Web3",
+        description: "Kanye West и Drake выпустили громкие альбомы",
       },
       {
         year: 2023,
-        description:
-          "Расцвет ИИ: ChatGPT и другие нейросети становятся мейнстримом",
+        description: "AI-генерированная музыка стала популярной в TikTok",
       },
       {
         year: 2024,
-        description:
-          "Запуск сети спутникового интернета Starlink в большинстве стран",
+        description: "Голографические концерты привлекли миллионы зрителей",
       },
       {
         year: 2025,
+        description: "NFT-альбомы изменили музыкальную индустрию",
+      },
+    ],
+  },
+  {
+    yearGap: {
+      first: 2025,
+      last: 2030,
+    },
+    topic: "История",
+    events: [
+      {
+        year: 2025,
+        description: "Мировые державы договорились о нейтральном выбросе CO₂",
+      },
+      {
+        year: 2026,
+        description: "Первая база на Луне приняла первых поселенцев",
+      },
+      {
+        year: 2027,
+        description: "Китай и США запустили совместную марсианскую миссию",
+      },
+      {
+        year: 2028,
+        description: "Глобальная цифровая валюта заменяет традиционные деньги",
+      },
+      {
+        year: 2029,
+        description: "Первая успешная трансплантация биопечатанных органов",
+      },
+      {
+        year: 2030,
+        description: "ИИ достиг уровня, сопоставимого с человеческим мышлением",
+      },
+    ],
+  },
+  {
+    yearGap: {
+      first: 2030,
+      last: 2035,
+    },
+    topic: "Технологии",
+    events: [
+      {
+        year: 2030,
+        description: "SpaceX отправила первую пилотируемую миссию на Марс",
+      },
+      {
+        year: 2031,
+        description: "Apple представила первый массовый AR-компьютер",
+      },
+      {
+        year: 2032,
+        description: "Квантовые компьютеры заменили традиционные серверы",
+      },
+      {
+        year: 2033,
+        description: "ИИ-ассистенты стали полноценными цифровыми личностями",
+      },
+      {
+        year: 2034,
         description:
-          "Развитие квантовых компьютеров и их коммерческое применение",
+          "Мозговые интерфейсы стали стандартом взаимодействия с техникой",
+      },
+      {
+        year: 2035,
+        description: "Ядерный синтез обеспечил дешевую и чистую энергию",
       },
     ],
   },
